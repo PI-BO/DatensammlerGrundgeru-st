@@ -38,9 +38,9 @@
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:id="@+id/bttnDatensammlung"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="18dp"
         android:layout_below="@+id/cbDatensammeln"
-         />
+        android:layout_centerHorizontal="true" />
 
     <SeekBar
         android:layout_width="wrap_content"
@@ -62,19 +62,6 @@
         android:layout_below="@+id/sbIntervall"
         android:layout_alignStart="@+id/sbIntervall"
         android:layout_marginStart="13dp" />
-
-    <Button
-        android:id="@+id/bttnKarte"
-        android:layout_height="35dp"
-        android:layout_width="100dp"
-
-        android:text="Karte"
-        android:layout_alignBottom="@+id/bttnDatensammlung"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_alignTop="@+id/bttnDatensammlung" />
 
 
 </RelativeLayout>

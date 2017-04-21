@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     CheckBox cbDatensammeln;
     Button bttnDatensammlung;
     SeekBar sbIntervall;
-    Button bttnKarte;
+
 
     int intervall;
 
@@ -70,14 +70,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         // GUI Elemente
         spinnerSensoren = (Spinner) findViewById(R.id.spinnerSensoren);
         tvSensordaten = (TextView) findViewById(R.id.tvSensordaten);
         tvIntervallanzeige = (TextView) findViewById(R.id.tvIntervallanzeige);
         cbDatensammeln = (CheckBox) findViewById(R.id.cbDatensammeln);
         bttnDatensammlung = (Button) findViewById(R.id.bttnDatensammlung);
-        bttnKarte = (Button) findViewById(R.id.bttnKarte);
         sbIntervall = (SeekBar) findViewById(R.id.sbIntervall);
 
         datensammlungAktiv = false; // Zu Beginn findet noch keine Datensammlung statt
@@ -86,21 +84,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         // Anlegen eines Sensormanagers
         // Dieser wird genutzt um später die einzelnen Sensoren am Sensor-Listener zu registrieren
         SensorManager sensorman = (SensorManager) getSystemService(SENSOR_SERVICE);
-
-        // Anlegen eines Lokationmanagers
-        LocationManager locationMan = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        SensorenErstellen(sensorman); // Füllen der Sensordatenliste mit den Sensoren, deren Werte ausgelesen werden sollen
-
+        LinkedList<Sensordaten> sensoren = SensorenErstellen(sensorman); // Füllen der Sensordatenliste mit den Sensoren, deren Werte ausgelesen werden sollen
         LinkedList<String> sensornamen = new LinkedList<String>();
 
+        for(Sensordaten s: sensoren){
+            sensornamen.add(s.name);
+        }
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, sensornamen);   // Der Spinner für die Sensorauswahl erhält alle Sensornamen als Inhalt
         spinnerSensoren.setAdapter(dataAdapter);
 
         spinnerSensoren.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                // Hier muss programmiert werden was passieren soll, wenn der Nutzer den Sensor im Spinner wechselt
             }
 
             @Override
@@ -113,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         cbDatensammeln.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // Hier wird programmiert, was passieren soll, falls die CheckBox mit der Option, ob für einen Sensor
+                // Daten aufgezeichnet werden sollen, betätigt wird.
 
             }
         });
@@ -121,23 +119,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         bttnDatensammlung.setOnClickListener(new View.OnClickListener() {
          @Override
              public void onClick(View v) {
-
+                    // Hier muss programmiert werden, was passieren soll wenn die Datensammlung gestartet, bzw. später wieder gestoppt wird.
              }
-        });
-
-        // Wenn auf den Button "Karte" gedrückt wird, öffnet sich eine neue Aktivität die eine Google Maps Karte beinhaltet.
-        bttnKarte.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
         });
 
         // Hiermit kann der Nutzer das Intervall mithilfe einer verschiebaren SeekBar einstellen.
         sbIntervall.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                // Hier wird programmiert, was passieren soll wenn der Nutzer mit der SeekBar ein neues Intervall einstellt.
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -149,34 +139,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     // wird nicht benötigt
             }
         });
-
-
-        LocationListener locListener = new LocationListener() { // Wird benötigt um die aktuelle Position festzustellen, ein LocationManager meldet sich später an diesem Listener an
-            @Override
-            public void onLocationChanged(Location location) {
-
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
-        // Prüfung der Rechte für Lokalisierung
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
 
     }
 
@@ -190,7 +152,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             // wird nicht benötigt
     }
 
-    public void SensorenErstellen(SensorManager sensorman){    // Hinzufügen der Sensoren zur Sensorliste, als Objekte der Klasse Sensordaten
-
+    public LinkedList<Sensordaten> SensorenErstellen(SensorManager sensorman){    // Hinzufügen der Sensoren zur Sensorliste, als Objekte der Klasse Sensordaten
+        LinkedList<Sensordaten> sensordatenliste = new LinkedList<Sensordaten>();
+        // Objekte der Klasse Sensordaten mit dem Konstruktor Sensordaten(Sensor,Name für den Sensor,Anzahl der Werte, Prefix bei Sensoren mit nur einem Wert)
+        
+        sensordatenliste.add(new Sensordaten(sensorman.getDefaultSensor(Sensor.TYPE_LIGHT),"Lichtsensor",1,"Lichteinfall"));
+        sensordatenliste.add(new Sensordaten(sensorman.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),"Beschleunigung",3,null));
+        sensordatenliste.add(new Sensordaten(sensorman.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),"Lineare Beschleunigung",3,null));
+        sensordatenliste.add(new Sensordaten(sensorman.getDefaultSensor(Sensor.TYPE_PRESSURE),"Luftdruck",1,"Luftdruck"));
+        sensordatenliste.add(new Sensordaten(sensorman.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),"Magnetisches Feld",3,null));
+        sensordatenliste.add(new Sensordaten(sensorman.getDefaultSensor(Sensor.TYPE_GYROSCOPE),"Gyroskop",3,null));
+        return sensordatenliste;
     }
 }
