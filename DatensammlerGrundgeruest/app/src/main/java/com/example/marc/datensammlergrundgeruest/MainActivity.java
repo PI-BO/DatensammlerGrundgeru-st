@@ -63,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     boolean datensammlungAktiv;  // true bzw. false je nachdem ob die Datensammlung gestartet ist oder nicht
     Handler handler;             // wird benötigt um
-    Runnable werteabfragen;      // dieses Runnable immer in einem bestimmten Intervall auszuführen
+    Runnable werteAnDBschicken;      // dieses Runnable immer in einem bestimmten Intervall auszuführen
+                                     // Dieses Runnable soll genutzt werden um die Sensorwerte an die Datenbank in einem bestimmten Intervall zu schicken.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public LinkedList<Sensordaten> SensorenErstellen(SensorManager sensorman){    // Hinzufügen der Sensoren zur Sensorliste, als Objekte der Klasse Sensordaten
         LinkedList<Sensordaten> sensordatenliste = new LinkedList<Sensordaten>();
         // Objekte der Klasse Sensordaten mit dem Konstruktor Sensordaten(Sensor,Name für den Sensor,Anzahl der Werte, Prefix bei Sensoren mit nur einem Wert)
-        
+
         sensordatenliste.add(new Sensordaten(sensorman.getDefaultSensor(Sensor.TYPE_LIGHT),"Lichtsensor",1,"Lichteinfall"));
         sensordatenliste.add(new Sensordaten(sensorman.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),"Beschleunigung",3,null));
         sensordatenliste.add(new Sensordaten(sensorman.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),"Lineare Beschleunigung",3,null));
