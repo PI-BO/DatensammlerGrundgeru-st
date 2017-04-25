@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 
 /*
 Innerhalb dieser Klasse sind alle Hauptfunktionen der Applikation zu finden.
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
     int intervall;
-
+    LinkedList<Sensordaten> sensoren;
 
     boolean datensammlungAktiv;  // true bzw. false je nachdem ob die Datensammlung gestartet ist oder nicht
     Handler handler;             // wird benötigt um
@@ -85,12 +86,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         // Anlegen eines Sensormanagers
         // Dieser wird genutzt um später die einzelnen Sensoren am Sensor-Listener zu registrieren
         SensorManager sensorman = (SensorManager) getSystemService(SENSOR_SERVICE);
-        LinkedList<Sensordaten> sensoren = SensorenErstellen(sensorman); // Füllen der Sensordatenliste mit den Sensoren, deren Werte ausgelesen werden sollen
+        sensoren = sensorenErstellen(sensorman); // Füllen der Sensordatenliste mit den Sensoren, deren Werte ausgelesen werden sollen
         LinkedList<String> sensornamen = new LinkedList<String>();
 
         for(Sensordaten s: sensoren){
             sensornamen.add(s.name);
+           // sensorman.registerListener(this,s.sensor,sensorman.SENSOR_DELAY_NORMAL);
         }
+
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, sensornamen);   // Der Spinner für die Sensorauswahl erhält alle Sensornamen als Inhalt
         spinnerSensoren.setAdapter(dataAdapter);
 
@@ -98,6 +101,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Hier muss programmiert werden was passieren soll, wenn der Nutzer den Sensor im Spinner wechselt
+
+                //cbDatensammeln.setChecked(sensoren.get(position).aufzeichnung);
             }
 
             @Override
@@ -113,8 +118,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 // Hier wird programmiert, was passieren soll, falls die CheckBox mit der Option, ob für einen Sensor
                 // Daten aufgezeichnet werden sollen, betätigt wird.
 
+             /* int position = spinnerSensoren.getSelectedItemPosition();   // Position des in der Sensorauswahl ausgewählten Sensor herausfinden
+                sensoren.get(position).aufzeichnung = isChecked;    // Position wird genutzt um den Sensor aus der Sensordatenliste zu erhalten und das Attribut aufzeichnung zu ändern
+               */
             }
         });
+
 
         //Starten bzw. Stoppen der Datensammlung
         bttnDatensammlung.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +138,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 // Hier wird programmiert, was passieren soll wenn der Nutzer mit der SeekBar ein neues Intervall einstellt.
+
+               /* intervall = progress + 1; // Wird benötigt, da es ansonsten ein Intervall von 0 Sekunden gibt, dass für Fehler sorgt.
+                tvIntervallanzeige.setText("Intervall: " + intervall + " Sekunden"); */
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -141,10 +153,37 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        sbIntervall.setProgress(2);
+
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) { // In dieser Methode wird festgelegt was passieren soll falls sich der Wert eines Sensors verändert
+
+        /*int listenposition = spinnerSensoren.getSelectedItemPosition();        // Der in der Sensorauswahl ausgewählte Sensor wird gspeichert
+        String ausgabe = "";
+
+        if (event.sensor.getType() == sensoren.get(listenposition).sensor.getType()) {
+            if (sensoren.get(listenposition).anzahlwerte == 3) {   // Wenn der ausgewählte Sensor, ein Sensor mit 3 Achsen ist...
+                ausgabe = "Werte: \n" + sensoren.get(listenposition).prefix[0] + ": " + event.values[0] + "\n" +
+                        sensoren.get(listenposition).prefix[1] + ": " + event.values[1] + "\n" +                // Ausgabe für einen Sensor mit 3 Achsen
+                        sensoren.get(listenposition).prefix[2] +": "+ event.values[2];
+            } else {                                                       // Wenn der ausgewählte Sensor, ein Sensor mit nur 1 Achse ist...
+                ausgabe = "Wert: \n" + sensoren.get(listenposition).prefix[0]+": " + event.values[0];               // Ausgabe für einen Sensor mit 1 Achse
+            }
+            tvSensordaten.setText(ausgabe); // Ausgabe wird dargestellt
+        }
+
+        Sensordaten neuewerte = sensordatenFinden(event.sensor.getType());   // Der Sensor für den neue Werte ausgelesen wurden, wird ermittelt mithilfe der Funktion SensordatenFinden()
+        if(neuewerte.anzahlwerte == 3){     // Wenn der Sensor ein Sensor mit 3 Achsen ist...
+            neuewerte.erhaltenewerteX.add((double) event.values[0]);        //
+            neuewerte.erhaltenewerteY.add((double) event.values[1]);        // Die Werte für alle 3 Achse werden den zugehörigen Listen hinzugefügt.
+            neuewerte.erhaltenewerteZ.add((double) event.values[2]);        //
+        }
+        else{
+            neuewerte.erhaltenewerteX.add((double) event.values[0]);        // Der Wert für eine Achse wird der zugehörigen Liste hinzugefügt.
+        } */
+
 
     }
 
@@ -153,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             // wird nicht benötigt
     }
 
-    public LinkedList<Sensordaten> SensorenErstellen(SensorManager sensorman){    // Hinzufügen der Sensoren zur Sensorliste, als Objekte der Klasse Sensordaten
+    public LinkedList<Sensordaten> sensorenErstellen(SensorManager sensorman){    // Hinzufügen der Sensoren zur Sensorliste, als Objekte der Klasse Sensordaten
         LinkedList<Sensordaten> sensordatenliste = new LinkedList<Sensordaten>();
         // Objekte der Klasse Sensordaten mit dem Konstruktor Sensordaten(Sensor,Name für den Sensor,Anzahl der Werte, Prefix bei Sensoren mit nur einem Wert)
 
@@ -164,5 +203,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sensordatenliste.add(new Sensordaten(sensorman.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),"Magnetisches Feld",3,null));
         sensordatenliste.add(new Sensordaten(sensorman.getDefaultSensor(Sensor.TYPE_GYROSCOPE),"Gyroskop",3,null));
         return sensordatenliste;
+    }
+
+    public Sensordaten sensordatenFinden(int sensortyp){
+        for(Sensordaten sd : sensoren){        // Zu der ID gehörender Sensor wird aus der Liste herausgesucht
+            if(sd.sensor.getType() == sensortyp){
+                return sd;
+            }
+        }
+        return null;
     }
 }
