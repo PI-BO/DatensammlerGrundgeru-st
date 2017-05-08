@@ -63,5 +63,35 @@
         android:layout_alignStart="@+id/sbIntervall"
         android:layout_marginStart="13dp" />
 
+    <TextView
+        android:id="@+id/lblSessionId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="54dp"
+        android:text="Session ID:"
+        android:layout_below="@+id/tvIntervallanzeige"
+        android:layout_toStartOf="@+id/tvIntervallanzeige" />
+
+    <EditText
+        android:id="@+id/txtSessionID"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lblSessionId"
+        android:layout_alignBottom="@+id/lblSessionId"
+        android:layout_toEndOf="@+id/lblSessionId"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:text="" />
+
+    <Button
+        android:id="@+id/bttnOK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtSessionID"
+        android:layout_alignBottom="@+id/txtSessionID"
+        android:layout_marginStart="14dp"
+        android:layout_toEndOf="@+id/txtSessionID"
+        android:text="OK" />
+
 
 </RelativeLayout>
