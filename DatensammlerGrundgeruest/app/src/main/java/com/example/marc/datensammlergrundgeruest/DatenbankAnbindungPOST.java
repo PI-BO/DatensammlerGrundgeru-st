@@ -54,7 +54,7 @@ public class DatenbankAnbindungPOST extends AsyncTask {
             outputStream.close();
 
             InputStream inputStream;
-            // get stream
+            // Unterscheidung zwischen Stream für Ergebnisausgabe oder Stream für Fehlerausgabe
             if (conn.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {
                 inputStream = conn.getInputStream();
             } else {
