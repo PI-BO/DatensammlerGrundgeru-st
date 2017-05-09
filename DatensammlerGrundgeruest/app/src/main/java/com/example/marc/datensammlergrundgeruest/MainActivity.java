@@ -253,6 +253,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                                                       }
                                                       Log.d("JSON",jsonArrayMitWerten.toString());
+                                                      // Faktor 1000 sorgt für die Einheit in Sekunden
+                                                      // Um eine höhere Datenaufzeichnungsfrequenz zu erreichen muss dieser Faktor
+                                                      // verändert werden.
                                                       handler.postDelayed(werteSpeichern, intervall * 1000);
                                                   }
                                               };
@@ -318,13 +321,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (event.sensor.getType() == sensoren.get(listenposition).sensor.getType()) {
             if (sensoren.get(listenposition).anzahlwerte == 3) {   // Wenn der ausgewählte Sensor, ein Sensor mit 3 Achsen ist...
 
-                // todo: Die ausgelesenen Werte für einen Sensor mit 3 Achsen müssen hier ausgegeben werden.
-                ausgabe = "Werte: ";     // Ausgabe für einen Sensor mit 3 Achsen
+                // todo: Die ausgelesenen Werte für einen Sensor mit 3 Achsen müssen hier ausgegeben werden. Die ausgelesenen Werte sind unter event.values abrufbar.
+                ausgabe = "Werte: ";    // Ausgabe für einen Sensor mit 3 Achsen
 
             } else {// Wenn der ausgewählte Sensor, ein Sensor mit nur 1 Achse ist...
 
-                // todo: Der ausgelesene Wert für einen Sensor mit einer Achse muss hier ausgegeben werden.
-                ausgabe = "Wert: ";   // Ausgabe für einen Sensor mit 1 Achse
+                // todo: Der ausgelesene Wert für einen Sensor mit einer Achse muss hier ausgegeben werden. Die ausgelesenen Werte sind unter event.values abrufbar.
+                ausgabe = "Wert: ";    // Ausgabe für einen Sensor mit 1 Achse
 
             }
             tvSensordaten.setText(ausgabe); // Ausgabe wird dargestellt
@@ -334,12 +337,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         if(neuewerte.anzahlwerte == 3){     // Wenn der Sensor ein Sensor mit 3 Achsen ist...
 
-            // todo: Die ausgelesenen Werte des Sensors müssen den zugehörigen Listen (eine Liste pro Achse) in neuewerte hinzugefügt werden.
+            // todo: Die ausgelesenen Werte des Sensors müssen den zugehörigen Listen (eine Liste pro Achse) in neuewerte hinzugefügt werden. Die ausgelesenen Werte sind unter event.values abrufbar.
+
 
         }
         else{   // Wenn der Sensor ein Sensor mit einer Achse ist
 
-            // todo: Der ausgelesene Wert des Sensors muss der zugehörigen Liste (Liste für die x-Achse) in neuewerte hinzugefügt werden.
+            // todo: Der ausgelesene Wert des Sensors muss der zugehörigen Liste (Liste für die x-Achse) in neuewerte hinzugefügt werden. Die ausgelesenen Werte sind unter event.values abrufbar.
 
         }
 
